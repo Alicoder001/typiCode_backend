@@ -15,16 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getData = void 0;
 const posts_models_1 = __importDefault(require("../models/posts.models"));
 function getData(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const limit = req.query.limit || 20;
-            const page = req.query.page || 1;
-            const skip = req.query.skip || 0;
-            const sort = req.query.sort || 1;
-            const sortType = req.query.sort_type || 'id';
-            const q = req.query.q || '';
+            const limit = +(req.query.limit || 20);
+            const page = +(req.query.page || 1);
+            const skip = +(req.query.skip || 0);
+            const sort = +(req.query.sort || 1);
+            const sortType = ((_a = req.query.sort_type) === null || _a === void 0 ? void 0 : _a.toString()) || 'id';
+            const q = (req.query.q || '').toString();
             const count = yield posts_models_1.default.find({}).count({});
-            let data = yield posts_models_1.default.find({ $or: [{ title: { $regex: q, $options: 'i' } }, { body: { $regex: q, $options: 'i' } }] }, { _id: 0 }, { sort: { [sortType]: sort }, limit, skip: (page - 1) * limit + skip });
+            let data = yield posts_models_1.default.find({ $or: [{ title: { $regex: q, $options: 'i' } }, { body: { $regex: q, $options: 'i' } }] }, { _id: 0 }, { sort: { [sortType]: +sort }, limit: +limit, skip: (+page - 1) * +limit + +skip });
             const fullData = {
                 posts: data,
                 total: count,
